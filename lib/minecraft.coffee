@@ -604,10 +604,12 @@ class Game
         return
 
 @Minecraft =
+
     start: ->
-        $("#blocks").hide()
         $('#instructions').hide()
+
         $(document).bind "contextmenu", -> false
+
         return Detector.addGetWebGLMessage() unless Detector.webgl
         startGame = ->
             game = new Game()
@@ -617,4 +619,5 @@ class Game
             window.game = game
             game.start()
         new Instructions(startGame).insert()
+
 

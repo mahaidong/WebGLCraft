@@ -928,7 +928,6 @@
   this.Minecraft = {
     start: function() {
       var startGame;
-      $("#blocks").hide();
       $('#instructions').hide();
       $(document).bind("contextmenu", function() {
         return false;

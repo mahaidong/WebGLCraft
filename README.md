@@ -1,7 +1,5 @@
-WebGLCraft
+Blocks
 ==============
-
-WebGL implementation of [Minecraft](http://www.minecraft.net/) written in [Coffeescript](http://jashkenas.github.com/coffee-script/).
 
 You can read more about the development of this project [here](http://metaphysicaldeveloper.wordpress.com/2011/12/20/implementing-minecraft-in-webgl/)
 
