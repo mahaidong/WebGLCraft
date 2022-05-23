@@ -26,6 +26,6 @@ which simply runs
 
     python -m SimpleHTTPServer
 
-enabling you to open the game on [http://localhost:8000/public/](http://localhost:8000/public/)
+enabling you to open the game on [http://localhost:8000/docs/](http://localhost:8000/docs/)
 
 

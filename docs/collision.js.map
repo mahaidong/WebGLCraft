@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "collision.js",
+  "sourceRoot": "../",
+  "sources": [
+    "lib/collision.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;EAAA,IAAC,CAAA,cAAD,GAEI,CAAA;;IAAA,qBAAA,EAAuB,QAAA,CAAC,EAAD,EAAK,EAAL,EAAS,EAAT,EAAa,EAAb,CAAA;MACnB,IAAe,EAAA,KAAM,EAArB;AAAA,eAAO,KAAP;;MACA,IAAmB,EAAA,GAAK,EAAxB;AAAA,eAAO,EAAA,IAAM,GAAb;;AACA,aAAO,EAAA,IAAM;IAHM,CAAvB;;;IAOA,iBAAA,EAAmB,QAAA,CAAC,KAAD,EAAQ,KAAR,CAAA;AACvB,UAAA,IAAA,EAAA,QAAA,EAAA,IAAA,EAAA,CAAA,EAAA,GAAA,EAAA;MAAQ,IAAA,GAAO,IAAC,CAAA;AACR;MAAA,KAAA,qCAAA;;QACI,QAAA,GAAW,IAAA,CAAK,KAAK,CAAC,IAAI,CAAC,IAAD,CAAf,EAAuB,KAAK,CAAC,IAAI,CAAC,IAAD,CAAjC,EACT,KAAK,CAAC,IAAI,CAAC,IAAD,CADD,EACS,KAAK,CAAC,IAAI,CAAC,IAAD,CADnB;QAEX,KAAoB,QAApB;AAAA,iBAAO,MAAP;;MAHJ;AAIA,aAAO;IANQ;EAPnB;AAFJ",
+  "sourcesContent": [
+    "@CollisionUtils =\r\n    # The two intervals are [s1, f1] and [s2, f2]\r\n    testIntervalCollision: (s1, f1, s2, f2) ->\r\n        return true if s1 == s2\r\n        return f1 >= s2 if s1 < s2\r\n        return f2 >= s1\r\n\r\n    #Cubes are objects with vmax, vmin (the vertices with greatest/smallest values)\r\n    #properties. Assumes unrotated cubes.\r\n    testCubeCollision: (cube1, cube2) ->\r\n        fcol = @testIntervalCollision\r\n        for axis in ['x', 'y', 'z']\r\n            collides = fcol cube1.vmin[axis], cube1.vmax[axis]\r\n            , cube2.vmin[axis], cube2.vmax[axis]\r\n            return false unless collides\r\n        return true\r\n\r\n"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "methodTracer.js",
+  "sourceRoot": "../",
+  "sources": [
+    "lib/methodTracer.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;EAAM,IAAC,CAAA,eAAP,MAAA,aAAA;IACI,WAAa,CAAA,CAAA;MACT,IAAC,CAAA,MAAD,GAAU,CAAA;IADD;;IAGb,KAAO,CAAC,QAAD,CAAA;AACX,UAAA,IAAA,EAAA,CAAA,EAAA,IAAA,EAAA,GAAA,EAAA,MAAA,EAAA;MAAQ,IAAA,GAAO,IAAA,CAAK,QAAL;AACP;MAAA,KAAA,WAAA;;cAAmC,OAAO,CAAP,KAAY;;;QAC3C,QAAA,GAAW,CAAA,CAAA,CAAG,QAAH,CAAA,CAAA,CAAA,CAAe,IAAf,CAAA;QACX,MAAA,GAAS,IAAC,CAAA;QACV,MAAM,CAAC,QAAD,CAAN,GAAmB;QACnB,IAAI,CAAC,SAAS,CAAC,IAAD,CAAd,GAAuB,QAAA,CAAA,GAAC,IAAD,CAAA;UACnB,MAAM,CAAC,QAAD,CAAN,GAAmB;iBACnB,CAAA,CAAE,GAAA,IAAF;QAFmB;MAJ3B;AAOA,aAAO;IATJ;;IAWP,YAAc,CAAC,UAAD,CAAA;AAClB,UAAA,IAAA,EAAA,CAAA,EAAA,GAAA,EAAA;AAAQ;MAAA,KAAA,qCAAA;;QACI,IAAC,CAAA,KAAD,CAAO,IAAP;MADJ;AAEA,aAAO;IAHG;;IAKd,WAAa,CAAC,MAAD,EAAS,UAAT,CAAA;AACjB,UAAA,CAAA,EAAA,IAAA,EAAA,MAAA,EAAA;MAAQ,KAAA,cAAA;;cAA4B,OAAO,CAAP,KAAY;;;QACpC,QAAA,GAAW,CAAA,OAAA,CAAA,CAAU,UAAV,CAAA,CAAA,CAAA,CAAwB,IAAxB,CAAA;QACX,MAAA,GAAS,IAAC,CAAA;QACV,MAAM,CAAC,QAAD,CAAN,GAAmB;QACnB,MAAM,CAAC,IAAD,CAAN,GAAe,IAAC,CAAA,MAAD,CAAQ,MAAR,EAAgB,QAAhB,EAA0B,CAA1B;MAJnB;AAKA,aAAO;IANE;;IAQb,MAAQ,CAAC,MAAD,EAAS,QAAT,EAAmB,CAAnB,CAAA;AACZ,UAAA;MAAQ,IAAA,GAAO;AACP,aAAO,QAAA,CAAA,GAAC,IAAD,CAAA;QACH,IAAI,CAAC,MAAM,CAAC,QAAD,CAAX,GAAwB;eACxB,CAAC,CAAC,KAAF,CAAQ,MAAR,EAAgB,IAAhB;MAFG;IAFH;;IAMR,WAAa,CAAA,CAAA;AACjB,UAAA,EAAA,EAAA,GAAA,EAAA;AAAQ;MAAA,KAAA,SAAA;;YAA6B,CAAI;UAC7B,IAAA,CAAK,EAAL;;MADJ;AAEA,aAAO;IAHE;;EAlCjB;AAAA",
+  "sourcesContent": [
+    "class @MethodTracer\r\n    constructor: ->\r\n        @tracer = {}\r\n\r\n    trace: (clasname) ->\r\n        clas = eval(clasname)\r\n        for name, f of clas.prototype when typeof f is 'function'\r\n            uniqueId = \"#{clasname}##{name}\"\r\n            tracer = @tracer\r\n            tracer[uniqueId] = false\r\n            clas.prototype[name] = (args...) ->\r\n                tracer[uniqueId] = true\r\n                f(args...)\r\n        return @\r\n\r\n    traceClasses: (classNames) ->\r\n        for clas in classNames.split(' ')\r\n            @trace clas\r\n        return @\r\n\r\n    traceModule: (module, moduleName) ->\r\n        for name, f of module  when typeof f is 'function'\r\n            uniqueId = \"Module #{moduleName}##{name}\"\r\n            tracer = @tracer\r\n            tracer[uniqueId] = false\r\n            module[name] = @wrapfn(module, uniqueId, f)\r\n        return @\r\n\r\n    wrapfn: (module, uniqueId, f) ->\r\n        self = @\r\n        return (args...) ->\r\n            self.tracer[uniqueId] = true\r\n            f.apply(module, args)\r\n\r\n    printUnused: ->\r\n        for id, used of @tracer when not used\r\n            puts id\r\n        return @\r\n"
+  ]
+}

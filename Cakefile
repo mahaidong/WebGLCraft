@@ -14,13 +14,14 @@ compileall = (from, to, watch = false, callback = null) ->
     system 'coffee', args, callback
 
 task 'c', 'Compile and watch', ->
-    compileall 'lib/', 'public/', true
+    compileall 'lib/', 'docs/', true
     compileall 'spec/coffee', 'spec/javascripts', true
 
 task 'compile', 'Compile', ->
     puts "Compiling..."
-    compileall 'lib/', 'public/'
+    compileall 'lib/', 'docs/'
 
 task 'server', 'Serve the current filesystem. Needed for loading textures from fs.
 Require python installed.', ->
-    system 'python', '-m SimpleHTTPServer'.split(' ')
+    system 'python3', '-m http.server'.split(' ')
+
