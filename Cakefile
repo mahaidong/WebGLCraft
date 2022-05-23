@@ -24,9 +24,3 @@ task 'compile', 'Compile', ->
 task 'server', 'Serve the current filesystem. Needed for loading textures from fs.
 Require python installed.', ->
     system 'python', '-m SimpleHTTPServer'.split(' ')
-
-task 'spec', "runs unit tests", ->
-    puts "Make sure to be running server on port 8000"
-    compileall 'lib/', 'public/', false, ->
-        compileall 'spec/coffee', 'spec/javascripts', false, ->
-            system "open", ["http://localhost:8000/spec/web_runner.html"]

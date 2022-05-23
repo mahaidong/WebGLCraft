@@ -53,3 +53,4 @@ class @Instructions
         return
 
     img: (name) -> "<img src='./instructions/#{name}.png'/>"
+

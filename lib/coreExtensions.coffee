@@ -5,7 +5,6 @@ patch Number,
 
     div: (arg) -> return Math.floor(@ / arg)
 
-
     times: (fn) ->
         i = 0
         while i < @
@@ -14,7 +13,6 @@ patch Number,
     toRadians: -> (@ * Math.PI) / 180
 
     toDegrees: ->  (@ * 180) / Math.PI
-
 
 @assoc = (o, i) ->
     (o[k] = v) for k, v of i

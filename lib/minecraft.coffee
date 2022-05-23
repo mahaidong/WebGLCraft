@@ -7,18 +7,17 @@
 {LinearMipMapLinearFilter, ClampToEdgeWrapping, Clock} = THREE
 
 vec = (x, y, z) -> new Vector3 x, y, z
-
 CubeSize = 50
 
 class Player
-    width: CubeSize * 0.3
-    depth: CubeSize * 0.3
+    width:  CubeSize * 0.3
+    depth:  CubeSize * 0.3
     height: CubeSize * 1.63
 
     constructor: ->
         @halfHeight = @height / 2
-        @halfWidth = @width / 2
-        @halfDepth = @depth / 2
+        @halfWidth  = @width / 2
+        @halfDepth  = @depth / 2
         @pos = vec()
         @eyesDelta = @halfHeight * 0.9
 
@@ -26,7 +25,6 @@ class Player
         ret = @pos.clone()
         ret.y += @eyesDelta
         return ret
-
 
     position: (axis) ->
         return @pos unless axis?
@@ -39,7 +37,6 @@ class Player
     setPosition: (axis, val) ->
         @pos[axis] = val
         return
-
 
     collidesWithGround: -> @position('y') < @halfHeight
 
@@ -55,7 +52,6 @@ class Player
         vmax = @vertex 1, 1, 1
         return {vmin: vmin, vmax: vmax}
 
-
 class Grid
     constructor: (@size = 5) ->
         @matrix = []
@@ -68,7 +64,6 @@ class Grid
     insideGrid: (x, y, z) -> 0 <= x < @size and 0 <= y < @size and 0 <= z < @size
 
     get: (x, y, z) -> @matrix[x][y][z]
-
     put: (x, y, z, val) -> 
         @matrix[x][y][z] = val
         return @map[x][y][z] = null unless val
@@ -79,7 +74,6 @@ class Grid
         y = Math.floor(y / CubeSize)
         z = Math.floor(z / CubeSize)
         return [x, y, z]
-
 
 class CollisionHelper
     constructor: (@player, @grid)-> return
@@ -98,7 +92,6 @@ class CollisionHelper
         p = @player.position()
         [x, y, z] = @grid.gridCoords p.x, p.y, p.z
         return true unless @grid.insideGrid x, 0, z
-
 
     _addToPosition: (position, value) ->
         pos = position.clone()
@@ -155,21 +148,28 @@ TextureHelper =
     loadTexture: (path) ->
         image = new Image()
         image.src = path
-        texture = new Texture(image, new UVMapping(), ClampToEdgeWrapping, ClampToEdgeWrapping, NearestFilter, LinearMipMapLinearFilter)
+        texture = new Texture(image,
+                              new UVMapping(),
+                              ClampToEdgeWrapping,
+                              ClampToEdgeWrapping,
+                              NearestFilter,
+                              LinearMipMapLinearFilter)
         image.onload = -> texture.needsUpdate = true
         new THREE.MeshLambertMaterial(map: texture, ambient: 0xbbbbbb)
-
 
     tileTexture: (path, repeatx, repeaty) ->
         image = new Image()
         image.src = path
-        texture = new Texture(image, new UVMapping(), RepeatWrapping,
-        RepeatWrapping, NearestFilter, LinearMipMapLinearFilter)
+        texture = new Texture(image,
+                              new UVMapping(),
+                              RepeatWrapping,
+                              RepeatWrapping,
+                              NearestFilter,
+                              LinearMipMapLinearFilter)
         texture.repeat.x = repeatx
         texture.repeat.y = repeaty
         image.onload = -> texture.needsUpdate = true
         new THREE.MeshLambertMaterial(map: texture, ambient: 0xbbbbbb)
-
 
 
 class Floor
@@ -177,6 +177,7 @@ class Floor
         repeatX = width / CubeSize
         repeatY = height / CubeSize
         material = TextureHelper.tileTexture("./textures/bedrock.png", repeatX, repeatY)
+
         planeGeo = new PlaneGeometry(width, height, 1, 1)
         plane = new Mesh(planeGeo, material)
         plane.position.y = -1
@@ -186,39 +187,47 @@ class Floor
 
     addToScene: (scene) -> scene.add @plane
 
-
 class Game
     constructor: (@populateWorldFunction) ->
         @rad = CubeSize
+
         @currentMeshSpec = @createGrassGeometry()
-        @cubeBlocks = @createBlocksGeometry()
+        @cubeBlocks      = @createBlocksGeometry()
+
         @selectCubeBlock 'cobblestone'
         @move = {x: 0, z: 0, y: 0}
         @keysDown = {}
+
         @grid = new Grid(100)
+
         @onGround = true
         @pause = off
         @fullscreen = off
+
         @renderer = @createRenderer()
         @rendererPosition = $("#minecraft-container canvas").offset()
+
         @camera = @createCamera()
+
         THREEx.WindowResize @renderer, @camera
         @canvas = @renderer.domElement
         @controls = new Controls @camera, @canvas
         @player = new Player()
-        @scene = new Scene()
+        @scene  = new Scene()
+
         new Floor(50000, 50000).addToScene @scene
         @scene.add @camera
         @addLights @scene
+
         @projector = new Projector()
         @castRay = null
         @moved = false
         @toDelete = null
+
         @collisionHelper = new CollisionHelper(@player, @grid)
         @clock = new Clock()
         @populateWorld()
         @defineControls()
-
 
     width: -> window.innerWidth
     height: -> window.innerHeight
@@ -234,11 +243,11 @@ class Game
     createGrassGeometry: ->
         [grass_dirt, grass, dirt] = @textures "grass_dirt", "grass", "dirt"
         materials = [grass_dirt, #right
-            grass_dirt, # left
-            grass, # top
-            dirt, # bottom
-            grass_dirt, # back
-            grass_dirt]  #front
+                     grass_dirt, # left
+                     grass, # top
+                     dirt, # bottom
+                     grass_dirt, # back
+                     grass_dirt]  #front
         @meshSpec new THREE.CubeGeometry( @rad, @rad, @rad, 1, 1, 1), materials
 
     texture: (name) -> TextureHelper.loadTexture "./textures/#{name}.png"
@@ -293,6 +302,7 @@ class Game
       middle = @grid.size / 2
       data = @generateHeight()
       playerHeight = null
+
       for i in [-5..5]
         for j in [-5..5]
           height =(Math.abs Math.floor(data[i + 5][j + 5])) + 1
@@ -300,7 +310,6 @@ class Game
           height.times (k) => @cubeAt middle + i , k, middle + j
       middlePos = middle * CubeSize
       @player.pos.set middlePos, playerHeight, middlePos
-
 
     populateWorld2: ->
         middle = @grid.size / 2
@@ -322,8 +331,10 @@ class Game
         halfcube = CubeSize / 2
         mesh.position.set CubeSize * x, y * CubeSize + halfcube, CubeSize * z
         mesh.name = "block"
+
         if validatingFunction?
             return unless validatingFunction(mesh)
+
         @grid.put x, y, z, mesh
         @scene.add mesh
         mesh.updateMatrix()
@@ -365,7 +376,7 @@ class Game
         $(document).bind 'keydown', 'k', => @save()
         for target in [document, @canvas]
             $(target).mousedown (e) => @onMouseDown e
-            $(target).mouseup (e) => @onMouseUp e
+            $(target).mouseup (e)   => @onMouseUp e
             $(target).mousemove (e) => @onMouseMove e
 
     save: ->
@@ -489,7 +500,6 @@ class Game
         @createCubeAt x, y, z
         return
 
-
     collides: -> @collisionHelper.collides()
 
     start: ->
@@ -497,19 +507,14 @@ class Game
             @tick() unless @pause
             requestAnimationFrame animate, @renderer.domElement
         animate()
-#        PointerLock.init onEnable: @enablePointLock, onDisable: @disablePointLock
-#        PointerLock.fullScreenLock($("#app canvas").get(0))
 
     enablePointLock: =>
         $("#cursor").show()
-#        @controls.enableMouseLocked()
         @fullscreen = on
 
     disablePointLock: =>
         $("#cursor").hide()
-#        @controls.disableMouseLocked()
         @fullscreen = off
-
 
     axes: ['x', 'y', 'z']
     iterationCount: 10

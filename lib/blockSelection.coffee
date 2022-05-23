@@ -1,5 +1,16 @@
-@Blocks = ["cobblestone", "plank", "brick", "diamond",
-          "glowstone", "obsidian", "whitewool", "bluewool", "redwool", "netherrack"]
+@Blocks = ["cobblestone",
+           "plank",
+           "brick",
+           "diamond",
+           "glowstone",
+           "obsidian",
+           "whitewool",
+           "bluewool",
+           "redwool",
+           # "netherrack",
+           "one"
+           ]
+
 
 class @BlockSelection
     constructor: (@game) -> @current = "cobblestone"
@@ -16,7 +27,7 @@ class @BlockSelection
         index = (Blocks.indexOf(@current) - dif).mod(Blocks.length)
         @select Blocks[index]
 
-    ligthUp: (target) -> @_setOpacity target, 0.8
+    ligthUp: (target)  -> @_setOpacity target, 0.8
     lightOff: (target) -> @_setOpacity target, 1
 
     select: (name) ->
@@ -36,3 +47,4 @@ class @BlockSelection
         domElement.mousedown (e) => @mousedown e
         $(document).mousewheel (e, delta) => @mousewheel delta
         domElement.show()
+
