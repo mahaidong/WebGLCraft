@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "minecraft.js",
-  "sourceRoot": "../",
+  "sourceRoot": "..",
   "sources": [
     "lib/minecraft.coffee"
   ],

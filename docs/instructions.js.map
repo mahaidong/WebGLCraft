@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "instructions.js",
-  "sourceRoot": "../",
+  "sourceRoot": "..",
   "sources": [
     "lib/instructions.coffee"
   ],
