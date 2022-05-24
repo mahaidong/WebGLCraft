@@ -611,6 +611,7 @@ class Game
         $(document).bind "contextmenu", -> false
 
         return Detector.addGetWebGLMessage() unless Detector.webgl
+        
         startGame = ->
             game = new Game()
             new BlockSelection(game).insert()
@@ -618,6 +619,7 @@ class Game
             $("#minecraft-blocks").show()
             window.game = game
             game.start()
+            
         new Instructions(startGame).insert()
 
 

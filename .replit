@@ -1,0 +1,8 @@
+entrypoint = "lib/test.coffee"
+[interpreter]
+command = ["smallbar", "-t", "coffee -i", "-r", "coffee lib/test.coffee"]
+prompt =[99, 111, 102, 102, 101, 101, 62]
+
+[nix]
+channel = "stable-21_11"
+
