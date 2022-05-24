@@ -1,17 +1,5 @@
-/nbproject/
-/.bundle/
-pkg
-db
-.hg
-
 ## EMACS
 *~
 \#*
 .\#*
 
-## Build
-*.gem
-public/*.js
-public/*.map
-spec/javascripts/*.js
-spec/javascripts/*.map
