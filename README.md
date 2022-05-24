@@ -22,7 +22,7 @@ If you wanna see the game locally, you need python, and you run
 
 which simply runs
 
-    python -m SimpleHTTPServer
+    python3 -m http.server
 
 enabling you to open the game on [http://localhost:8000/docs/](http://localhost:8000/docs/)
 

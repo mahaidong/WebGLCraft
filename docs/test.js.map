@@ -6,8 +6,8 @@
     "lib/test.coffee"
   ],
   "names": [],
-  "mappings": ";AAAA;EAAA,OAAO,CAAC,GAAR,CAAY,0BAAZ;AAAA",
+  "mappings": ";AAAA;EAAA,OAAO,CAAC,GAAR,CAAY,0BAAZ;;EACA,OAAO,CAAC,GAAR,CAAY,0BAAZ;;EACA,OAAO,CAAC,GAAR,CAAY,0BAAZ;;EAEA,OAAO,CAAC,GAAR,CAAY,0BAAZ;;EACA,OAAO,CAAC,GAAR,CAAY,0BAAZ;AALA",
   "sourcesContent": [
-    "console.log(\"hello world from replit!\");\r\n\r\n"
+    "console.log(\"hello world from replit!\");\r\nconsole.log(\"hello world from replit!\");\r\nconsole.log(\"hello world from replit!\");\r\n\r\nconsole.log(\"hello world from replit!\");\r\nconsole.log(\"hello world from replit!\");\r\n\r\n"
   ]
 }
