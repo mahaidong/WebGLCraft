@@ -303,7 +303,7 @@
         this.rad = CubeSize;
         this.currentMeshSpec = this.createGrassGeometry();
         this.cubeBlocks = this.createBlocksGeometry();
-        this.selectCubeBlock('cobblestone');
+        this.selectCubeBlock('one');
         this.move = {
           x: 0,
           z: 0,
@@ -319,7 +319,7 @@
         this.camera = this.createCamera();
         THREEx.WindowResize(this.renderer, this.camera);
         this.canvas = this.renderer.domElement;
-        this.controls = new Controls(this.camera, this.canvas);
+        this.CamControls = new CamControls(this.camera, this.canvas);
         this.player = new Player();
         this.scene = new Scene();
         new Floor(50000, 50000).addToScene(this.scene);
@@ -332,7 +332,7 @@
         this.collisionHelper = new CollisionHelper(this.player, this.grid);
         this.clock = new Clock();
         this.populateWorld();
-        this.defineControls();
+        this.defineCamControls();
       }
 
       width() {
@@ -436,7 +436,7 @@
         position = JSON.parse(localStorage["position"]);
         direction = JSON.parse(localStorage["direction"]);
         this.player.pos.set(...position);
-        this.controls.setDirection(direction);
+        this.CamControls.setDirection(direction);
         results = [];
         for (x = l = 0, len = map.length; l < len; x = ++l) {
           mapYZ = map[x];
@@ -560,7 +560,7 @@
         return scene.add(directionalLight);
       }
 
-      defineControls() {
+      defineCamControls() {
         var bindit, key, l, len, len1, m, ref, ref1, results, target;
         bindit = (key) => {
           $(document).bind('keydown', key, () => {
@@ -603,7 +603,7 @@
       save() {
         localStorage["map"] = JSON.stringify(this.grid.map);
         localStorage["position"] = JSON.stringify([this.player.position("x"), this.player.position("y"), this.player.position("z")]);
-        return localStorage["direction"] = JSON.stringify(this.controls.getDirection());
+        return localStorage["direction"] = JSON.stringify(this.CamControls.getDirection());
       }
 
       togglePause() {
@@ -864,7 +864,7 @@
 
       projectMoveOnCamera() {
         var frontDir, rightDir, x, z;
-        ({x, z} = this.controls.viewDirection());
+        ({x, z} = this.CamControls.viewDirection());
         frontDir = new Vector2(x, z).normalize();
         rightDir = new Vector2(frontDir.y, -frontDir.x);
         frontDir.multiplyScalar(this.move.z);
@@ -882,8 +882,8 @@
       setCameraEyes() {
         var eyesDelta, pos;
         pos = this.player.eyesPosition();
-        this.controls.move(pos);
-        eyesDelta = this.controls.viewDirection().normalize().multiplyScalar(20);
+        this.CamControls.move(pos);
+        eyesDelta = this.CamControls.viewDirection().normalize().multiplyScalar(20);
         eyesDelta.y = 0;
         pos.sub(eyesDelta);
       }
@@ -895,7 +895,7 @@
         this.deleteBlock();
         this.moveCube(speedRatio);
         this.renderer.clear();
-        this.controls.update();
+        this.CamControls.update();
         this.setCameraEyes();
         this.renderer.render(this.scene, this.camera);
       }
@@ -928,7 +928,6 @@
   this.Minecraft = {
     start: function() {
       var startGame;
-      $('#instructions').hide();
       $(document).bind("contextmenu", function() {
         return false;
       });

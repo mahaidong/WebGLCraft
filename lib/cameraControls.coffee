@@ -1,26 +1,31 @@
 @MouseEvent =
     isLeftButton: (event) -> event.which == 1
     isRightButton: (event) -> event.which == 3
-
     isLeftButtonDown: (event) -> event.button == 0 and @isLeftButton event
 
-class @Controls
+class @CamControls
+    # object: PerspectiveCamera
+    # https://threejs.org/docs/#api/en/core/Object3D
     constructor: (object, domElement) ->
         @object = object
         @target = new THREE.Vector3 0, 0, 0
         @domElement = domElement or document
+
         @lookSpeed = 0.20
         @mouseX = 0
         @mouseY = 0
         @lat = -66.59
         @lon = -31.8
+
         @deltaX = 0
         @deltaY = 0
+
         @mouseDragOn = false
         @anchorx = null
         @anchory = null
         @mouseLocked = false
         @defineBindings()
+        @showCrosshair()
 
     enableMouseLocked: -> @mouseLocked = true
     disableMouseLocked: -> @mouseLocked = false
@@ -30,7 +35,6 @@ class @Controls
         $(@domElement).mousedown (e) => @onMouseDown e
         $(@domElement).mouseup (e) => @onMouseUp e
         $(@domElement).mouseenter (e) => @onMouserEnter e
-
 
     showCrosshair: -> document.getElementById('cursor').style.display = 'block'
     hideCrosshair: -> document.getElementById('cursor').style.display = 'none'
@@ -61,7 +65,6 @@ class @Controls
         @deltaY = y
 
     setDirection: (dir) -> {@lat,@lon} = dir
-
     getDirection: -> {@lat,@lon}
 
     onMouseMove: (event) ->
@@ -88,17 +91,21 @@ class @Controls
         phi = (90 - @lat) * @halfCircle
         theta = @lon * @halfCircle
         p = @object.position
+
         assoc @target,
             x: p.x + 100 * sin(phi) * cos(theta)
             y: p.y + 100 * cos(phi)
             z: p.z + 100 * sin(phi) * sin(theta)
+
         @object.lookAt @target
         return
 
     update: ->
         return unless @mouseDragOn or @mouseLocked
         return if @mouseDragOn and @mouseX is @anchorx and @mouseY is @anchory
+
         {max, min} = Math
+
         if @mouseLocked
             return if @deltaX is @previousDeltaX and @deltaY is @previousDeltaY
             @previousDeltaX = @deltaX
@@ -114,4 +121,6 @@ class @Controls
         @lat -= @deltaY * @lookSpeed
         @lat = max(-85, min(85, @lat))
         @updateLook()
+
         return
+

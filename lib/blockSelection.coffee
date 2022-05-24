@@ -7,13 +7,12 @@
            "whitewool",
            "bluewool",
            "redwool",
-           # "netherrack",
+           "netherrack",
            "one"
            ]
 
-
 class @BlockSelection
-    constructor: (@game) -> @current = "cobblestone"
+    constructor: (@game) -> @current = "one"
 
     blockImg: (name) -> "<img width='32' height='32' src='./textures/#{name}icon.png' id='#{name}'/>"
 

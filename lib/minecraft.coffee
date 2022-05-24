@@ -10,6 +10,7 @@ vec = (x, y, z) -> new Vector3 x, y, z
 CubeSize = 50
 
 class Player
+
     width:  CubeSize * 0.3
     depth:  CubeSize * 0.3
     height: CubeSize * 1.63
@@ -53,6 +54,7 @@ class Player
         return {vmin: vmin, vmax: vmax}
 
 class Grid
+
     constructor: (@size = 5) ->
         @matrix = []
         @size.times (i) =>
@@ -76,6 +78,7 @@ class Grid
         return [x, y, z]
 
 class CollisionHelper
+
     constructor: (@player, @grid)-> return
     rad: CubeSize
     halfRad: CubeSize / 2
@@ -117,6 +120,7 @@ class CollisionHelper
         return cubes
 
     withRange: (func) ->
+
         {vmin, vmax} = @player.boundingBox()
         minx = @toGrid(vmin.x)
         miny = @toGrid(vmin.y)
@@ -145,6 +149,7 @@ class CollisionHelper
 
 
 TextureHelper =
+
     loadTexture: (path) ->
         image = new Image()
         image.src = path
@@ -176,25 +181,26 @@ class Floor
     constructor: (width, height) ->
         repeatX = width / CubeSize
         repeatY = height / CubeSize
+
         material = TextureHelper.tileTexture("./textures/bedrock.png", repeatX, repeatY)
 
         planeGeo = new PlaneGeometry(width, height, 1, 1)
         plane = new Mesh(planeGeo, material)
+
         plane.position.y = -1
         plane.rotation.x = -Math.PI / 2
         plane.name = 'floor'
         @plane = plane
-
     addToScene: (scene) -> scene.add @plane
 
 class Game
+
     constructor: (@populateWorldFunction) ->
         @rad = CubeSize
-
         @currentMeshSpec = @createGrassGeometry()
         @cubeBlocks      = @createBlocksGeometry()
 
-        @selectCubeBlock 'cobblestone'
+        @selectCubeBlock 'one'
         @move = {x: 0, z: 0, y: 0}
         @keysDown = {}
 
@@ -211,7 +217,7 @@ class Game
 
         THREEx.WindowResize @renderer, @camera
         @canvas = @renderer.domElement
-        @controls = new Controls @camera, @canvas
+        @CamControls = new CamControls @camera, @canvas
         @player = new Player()
         @scene  = new Scene()
 
@@ -227,7 +233,7 @@ class Game
         @collisionHelper = new CollisionHelper(@player, @grid)
         @clock = new Clock()
         @populateWorld()
-        @defineControls()
+        @defineCamControls()
 
     width: -> window.innerWidth
     height: -> window.innerHeight
@@ -258,11 +264,9 @@ class Game
 
     meshSpec: (geometry, material) -> {geometry, material}
 
-
     intoGrid: (x, y, z, val) ->
         args = @gridCoords(x, y, z).concat(val)
         return @grid.put args...
-
 
     generateHeight: ->
         size = 11
@@ -285,12 +289,12 @@ class Game
     haveSave: -> !!localStorage["map"] and !!localStorage["position"] and !! localStorage["direction"]
 
     loadWorld: ->
-        map = JSON.parse localStorage["map"]
-        position = JSON.parse localStorage["position"]
+        map       = JSON.parse localStorage["map"]
+        position  = JSON.parse localStorage["position"]
         direction = JSON.parse localStorage["direction"]
 
         @player.pos.set position...
-        @controls.setDirection direction
+        @CamControls.setDirection direction
 
         for mapYZ,x in map
             for mapZ,y in mapYZ
@@ -362,7 +366,7 @@ class Game
         directionalLight.position.normalize()
         scene.add directionalLight
 
-    defineControls: ->
+    defineCamControls: ->
         bindit = (key) =>
             $(document).bind 'keydown', key, =>
                 @keysDown[key] = true
@@ -370,10 +374,13 @@ class Game
             $(document).bind 'keyup', key, =>
                 @keysDown[key] = false
                 return false
+
         for key in "wasd".split('').concat('space', 'up', 'down', 'left', 'right')
             bindit key
+
         $(document).bind 'keydown', 'p', => @togglePause()
         $(document).bind 'keydown', 'k', => @save()
+
         for target in [document, @canvas]
             $(target).mousedown (e) => @onMouseDown e
             $(target).mouseup (e)   => @onMouseUp e
@@ -382,7 +389,7 @@ class Game
     save: ->
         localStorage["map"] = JSON.stringify @grid.map
         localStorage["position"] = JSON.stringify [ @player.position("x"),@player.position("y"),@player.position("z")]
-        localStorage["direction"] = JSON.stringify @controls.getDirection()
+        localStorage["direction"] = JSON.stringify @CamControls.getDirection()
 
     togglePause: ->
         @pause = !@pause
@@ -425,7 +432,6 @@ class Game
             return o unless o.object.name is 'floor'
         return null
 
-
     deleteBlockInGrid: (ray) ->
         target = @findBlock ray
         return unless target?
@@ -435,7 +441,6 @@ class Game
         {x, y, z} = mesh.position
         @intoGrid x, y, z, null
         return
-
 
     placeBlock: ->
         return unless @castRay?
@@ -522,6 +527,7 @@ class Game
     moveCube: (speedRatio) ->
         @defineMove()
         iterationCount = Math.round(@iterationCount * speedRatio)
+
         while iterationCount-- > 0
             @applyGravity()
             for axis in @axes when @move[axis] isnt 0
@@ -534,31 +540,34 @@ class Game
                     @onGround = false
         return
 
-
     playerKeys:
-        w: 'z+'
-        up: 'z+'
-        s: 'z-'
+        w:    'z+'
+        up:   'z+'
+        s:    'z-'
         down: 'z-'
-        a: 'x+'
+        a:    'x+'
         left: 'x+'
-        d: 'x-'
+        d:     'x-'
         right: 'x-'
 
     shouldJump: -> @keysDown.space and @onGround
 
     defineMove: ->
-        baseVel = .4
+        baseVel   = .4
         jumpSpeed = .8
+
         @move.x = 0
         @move.z = 0
+
         for key, action of @playerKeys
             [axis, operation] = action
             vel = if operation is '-' then -baseVel else baseVel
             @move[axis] += vel if @keysDown[key]
+
         if @shouldJump()
             @onGround = false
             @move.y = jumpSpeed
+
         @garanteeXYNorm()
         @projectMoveOnCamera()
         return
@@ -571,7 +580,7 @@ class Game
         return
 
     projectMoveOnCamera: ->
-        {x, z} = @controls.viewDirection()
+        {x, z} = @CamControls.viewDirection()
         frontDir = new Vector2(x, z).normalize()
         rightDir = new Vector2(frontDir.y, -frontDir.x)
         frontDir.multiplyScalar @move.z
@@ -579,13 +588,12 @@ class Game
         @move.x = frontDir.x + rightDir.x
         @move.z = frontDir.y + rightDir.y
 
-
     applyGravity: -> @move.y -= .005 unless @move.y < -1
 
     setCameraEyes: ->
         pos = @player.eyesPosition()
-        @controls.move pos
-        eyesDelta = @controls.viewDirection().normalize().multiplyScalar(20)
+        @CamControls.move pos
+        eyesDelta = @CamControls.viewDirection().normalize().multiplyScalar(20)
         eyesDelta.y = 0
         pos.sub eyesDelta
         return
@@ -594,32 +602,29 @@ class Game
 
     tick: ->
         speedRatio = @clock.getDelta() / @idealSpeed
+
         @placeBlock()
         @deleteBlock()
         @moveCube speedRatio
+
         @renderer.clear()
-        @controls.update()
+        @CamControls.update()
         @setCameraEyes()
         @renderer.render @scene, @camera
         return
 
 @Minecraft =
-
     start: ->
-        $('#instructions').hide()
-
         $(document).bind "contextmenu", -> false
-
         return Detector.addGetWebGLMessage() unless Detector.webgl
-        
+
         startGame = ->
             game = new Game()
             new BlockSelection(game).insert()
-
             $("#minecraft-blocks").show()
             window.game = game
             game.start()
-            
+
         new Instructions(startGame).insert()
 
 

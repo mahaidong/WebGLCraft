@@ -12,8 +12,10 @@
     }
   };
 
-  this.Controls = (function() {
-    class Controls {
+  this.CamControls = (function() {
+    class CamControls {
+      // object: PerspectiveCamera
+      // https://threejs.org/docs/#api/en/core/Object3D
       constructor(object, domElement) {
         this.object = object;
         this.target = new THREE.Vector3(0, 0, 0);
@@ -30,6 +32,7 @@
         this.anchory = null;
         this.mouseLocked = false;
         this.defineBindings();
+        this.showCrosshair();
       }
 
       enableMouseLocked() {
@@ -175,12 +178,12 @@
 
     };
 
-    Controls.prototype.halfCircle = Math.PI / 180;
+    CamControls.prototype.halfCircle = Math.PI / 180;
 
-    return Controls;
+    return CamControls;
 
   }).call(this);
 
 }).call(this);
 
-//# sourceMappingURL=camera.js.map
+//# sourceMappingURL=cameraControls.js.map
