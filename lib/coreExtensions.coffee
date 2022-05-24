@@ -1,3 +1,4 @@
+# https://github.com/danielribeiro/rbcoffee
 patch Number,
     mod: (arg) ->
         return @ % arg if @ >= 0

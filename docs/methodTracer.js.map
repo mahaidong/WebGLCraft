@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "methodTracer.js",
-  "sourceRoot": "..",
+  "sourceRoot": "../",
   "sources": [
     "lib/methodTracer.coffee"
   ],

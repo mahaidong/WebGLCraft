@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "coreExtensions.js",
-  "sourceRoot": "..",
+  "sourceRoot": "../",
   "sources": [
     "lib/coreExtensions.coffee"
   ],

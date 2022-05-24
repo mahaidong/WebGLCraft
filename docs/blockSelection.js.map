@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "blockSelection.js",
-  "sourceRoot": "..",
+  "sourceRoot": "../",
   "sources": [
     "lib/blockSelection.coffee"
   ],

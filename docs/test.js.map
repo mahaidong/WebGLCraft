@@ -1,13 +1,13 @@
 {
   "version": 3,
   "file": "test.js",
-  "sourceRoot": "..",
+  "sourceRoot": "../",
   "sources": [
     "lib/test.coffee"
   ],
   "names": [],
-  "mappings": ";AAAA;EAAA,OAAO,CAAC,GAAR,CAAY,cAAZ;;EACA,OAAO,CAAC,GAAR,CAAY,aAAZ;AADA",
+  "mappings": ";AAAA;EAAA,OAAO,CAAC,GAAR,CAAY,0BAAZ;AAAA",
   "sourcesContent": [
-    "console.log(\"hello world!\");\r\nconsole.log(\"hello again\");\r\n\r\n"
+    "console.log(\"hello world from replit!\");\r\n\r\n"
   ]
 }
